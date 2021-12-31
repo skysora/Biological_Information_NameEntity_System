@@ -18,16 +18,12 @@ def home():
     return render_template('index.html')
 
 # http://127.0.0.1:5000/display_all
-
-
 @app.route("/display_all")
 def display_all():
     res = dict(graph.nodes)
     return jsonify(res)
 
 # http://127.0.0.1:5000/search/?key=angiosarcoma
-
-
 @app.route("/search/", methods=['GET'])
 def search():
     key = request.args.get('key')
@@ -51,8 +47,6 @@ def search():
 
 # 之後要改成post，輸入文章
 # http://127.0.0.1:5000/show
-
-
 @app.route("/show", methods=['POST', 'GET'])
 def showArticle():
     # article = request.json['article']
