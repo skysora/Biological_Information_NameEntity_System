@@ -73,8 +73,9 @@ def showArticle():
     res = {}
     words = article.split(" ")
     words = [word for word in words if word not in stopwords.words('english')]
+
     N=2
-    for word_index in range(len(words)-N):
+    for word_index in range(len(words)-N+1):
         gram=words[word_index+1:word_index+N]
         words.append(words[word_index]+" "+''.join(gram))
 
