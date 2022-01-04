@@ -11,10 +11,10 @@
 
 <body>
   <div class="s004">
-    <form>
-      <fieldset>
-        <legend>Human Disease Ontology</legend>
-        <!-- <div class="inner-form">
+    <!--<form> -->
+    <fieldset>
+      <legend>Human Disease Ontology</legend>
+      <!-- <div class="inner-form">
           <div class="input-field">
             <input class="form-control" id="choices-text-preset-values" type="text" placeholder="Type to search..." />
             <button class="btn-search" type="button">
@@ -26,19 +26,19 @@
             </button>
           </div>
         </div> -->
-        <div class="suggestion-wrap">
-          <input type="button" value="Display all" onclick="display()">
-          <input type="text" name='q' id="q">
-          <button type="button" onclick="search()">Search</button>
-        </div>
-        <form method="POST">
-          <!-- <input type="text" name='article' , id="article">
-          <button type="button" onclick="highlight_article()">Submit article</button> -->
-          <input name='article' id='article'>
-          <input type='submit' onclick="highlight_article()">
-        </form>
-      </fieldset>
-    </form>
+      <div class="search">
+        Query: <input type="text" name='q' id="q">
+        <button type="button" onclick="search()">Search</button>
+      </div>
+      <form method='post' , action="/show">
+        Article: <input name='article' id='article' type='text'>
+        <button type='submit'>Submit</button>
+      </form>
+      <div class="display-all">
+        <input type="button" value="Display all" onclick="display()">
+      </div>
+    </fieldset>
+    <!--</form>-->
     <script>
       function display() {
         window.open("http://127.0.0.1:5000/display_all", "_blank");
@@ -51,13 +51,6 @@
         window.open(query_url, "_blank");
       }
 
-      function highlight_article() {
-        var article = document.getElementById("article").value;// 有抓到文章
-        window.alert(article);
-
-        window.alert('helrkas');
-        window.open("http://127.0.0.1:5000/show");
-      }
     </script>
   </div>
 
