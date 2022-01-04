@@ -1,5 +1,6 @@
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
+from nltk.corpus import stopwords
 from flask import Flask
 from flask import jsonify
 from flask import request
@@ -9,8 +10,8 @@ import obonet
 import sys
 import json
 import nltk
+import string
 nltk.download('stopwords')
-from nltk.corpus import stopwords
 app = Flask(__name__)
 
 url = 'data.obo'
@@ -70,43 +71,70 @@ def showArticle():
                   for id_, data in graph.nodes(data=True)}
     name_to_id = {data['name']: id_ for id_,
                   data in graph.nodes(data=True) if 'name' in data}
-    res = {}
+    res = []
     words = article.split(" ")
     words = [word for word in words if word not in stopwords.words('english')]
-
-    N=2
+    N = 4
     for word_index in range(len(words)-N+1):
-        gram=words[word_index+1:word_index+N]
-        words.append(words[word_index]+" "+''.join(gram))
+        gram = words[word_index+1:word_index+N]
+        words.append(words[word_index]+" "+' '.join(gram))
 
     for word in words:
         key = word
         if(key in name_to_id.keys()):
-            name = name_to_id[key]
-            res[word] = graph.nodes[name]
+            res.append(key)
+            #name = name_to_id[key]
+            #res[word] = graph.nodes[name]
 
-    return dictHTML(res)
+    return dictHTML(article, res)
+    # return res
 
 
-def dictHTML(d):
-    out = "<p>"
+def dictHTML(article, d):
+    print('d: ', d)
+    article = article.split(" ")
+    out = ""
+    k = 0
+    aflag = False
+    while k < len(article):
+        #print('k: ', k)
+        ngram = [article[k:k+n+1] for n in range(4)]
+        for i in range(len(ngram)):
+            ngram[i] = ' '.join(ngram[i])
 
-    # Human disease ontology
-    id_to_name = {id_: data.get('name')
-                  for id_, data in graph.nodes(data=True)}
-    name_to_id = {data['name']: id_ for id_,
-                  data in graph.nodes(data=True) if 'name' in data}
-
-    key = list(d.keys())
-    value = list(d.values())
-    for k in range(len(key)):
-        # 有在 database
-        if value[k]:
-            out += " <a href=http://127.0.0.1:5000/search/?key=" + \
-                key[k]+">" + key[k] + "</a> "
-        else:
-            out += " " + key[k] + " "
-    return out + "</p>"
+            #print('ngram:', ngram[i])
+            # 有在 database
+            if ngram[i] in d:
+                # print('inside')
+                tmp = ngram[i].split()
+                #print('split ngram: ', tmp)
+                href = ''
+                for i in range(len(tmp)):
+                    href += tmp[i] + '%20'
+                out += " <a href=http://127.0.0.1:5000/search/?key=" + \
+                    href[:-3]+">" + ngram[i] + "</a> "
+                # print("http://127.0.0.1:5000/search/?key="+ngram[i])
+                aflag = True
+                k += (i+1)
+                #print('after k: ', k)
+                if k >= len(article):
+                    # return out + "</p>"
+                    return render_template('article.html', ar=out)
+                continue
+        #print('here, aflag: ', aflag)
+        if aflag:
+            aflag = False
+            continue
+        #print('article[k]: ', article[k])
+        out += " " + article[k] + " "
+        k += 1
+        #print('after k: ', k)
+        aflag = False
+        if k >= len(article):
+            # return out + "</p>"
+            return render_template('article.html', ar=out)
+    # return out + "</p>"
+    return render_template('article.html', ar=out)
 
 
 if __name__ == '__main__':
