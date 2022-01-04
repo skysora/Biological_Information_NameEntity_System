@@ -830,7 +830,7 @@ legend {
   max-width: 790px;
 }
 
-.s004 form legend {
+.s004 legend {
   font-size: 36px;
   color: #fff;
   font-weight: 800;
@@ -960,7 +960,19 @@ legend {
   padding: 0 15px;
 }
 
-.s004 form .suggestion-wrap span {
+.s004 form .display-all {
+  font-size: 14px;
+  font-family: 'Helvetica', sans-serif;
+  display: inline-block;
+  padding: 0 15px;
+  line-height: 32px;
+  color: #fff;
+  border-radius: 16px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.s004 form .search {
   font-size: 14px;
   font-family: 'Helvetica', sans-serif;
   display: inline-block;
