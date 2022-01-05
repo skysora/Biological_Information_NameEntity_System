@@ -74,24 +74,33 @@ def showArticle():
     res = []
     words = article.split(" ")
     words = [word for word in words if word not in stopwords.words('english')]
-    N = 4
-    for word_index in range(len(words)-N+1):
-        gram = words[word_index+1:word_index+N]
-        words.append(words[word_index]+" "+' '.join(gram))
 
-    for word in words:
-        key = word
-        if(key in name_to_id.keys()):
-            res.append(key)
-            #name = name_to_id[key]
-            #res[word] = graph.nodes[name]
+    N = 4
+    # for word_index in range(len(words)-N+1):
+    #gram = words[word_index+1:word_index+N]
+    #words.append(words[word_index]+" "+' '.join(gram))
+
+    k = 0
+    while k < len(words):
+        ngram = [words[k:k+n+1] for n in range(N)]
+        for i in range(len(ngram)):
+            ngram[i] = ' '.join(ngram[i])
+            if ngram[i] in name_to_id.keys():
+                res.append(ngram[i])
+
+        k += 1
+    # for word in words:
+    #key = word
+    # if(key in name_to_id.keys()):
+    # res.append(key)
+    #name = name_to_id[key]
+    #res[word] = graph.nodes[name]
 
     return dictHTML(article, res)
     # return res
 
 
 def dictHTML(article, d):
-    print('d: ', d)
     article = article.split(" ")
     out = ""
     k = 0
